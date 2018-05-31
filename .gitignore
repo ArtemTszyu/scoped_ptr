@@ -1,32 +1,66 @@
-# Prerequisites
-*.d
+#include<iostream>
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+template<class T>
+class scoped_ptr {
+private:
+	T * ptr_;
+public:
+	explicit scoped_ptr(T * ptr = nullptr );
+	~scoped_ptr();
+	void reset(T * ptr = nullptr );
+	T & operator*() const;
+	T * operator->() const;
+	T * get() const;
+	void swap(scoped_ptr & other);
+	scoped_ptr & operator=(scoped_ptr const &) = delete;
+	scoped_ptr(scoped_ptr const &) = delete;
+};
 
-# Precompiled Headers
-*.gch
-*.pch
+struct X
+{
+	int m ;
+};
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+template<typename T>
+	scoped_ptr<T>::scoped_ptr(T * ptr )
+	{
+		ptr_ = ptr;
+	}
 
-# Fortran module files
-*.mod
-*.smod
+	template<typename T>
+	scoped_ptr<T>::~scoped_ptr()
+	{
+		if (ptr_) delete ptr_;
+	}
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+	template<typename T>
+	void scoped_ptr<T>::reset(T * ptr )
+	{
+		if (ptr_) delete ptr_;
+		ptr_ = ptr;
+	}
 
-# Executables
-*.exe
-*.out
-*.app
+	template<typename T>
+	T& scoped_ptr<T>:: operator*() const
+	{
+		 return *ptr_;
+	}
+	
+
+	template<typename T>
+	T* scoped_ptr<T>::operator->() const
+	{
+		return ptr_; 
+	}
+
+	template<typename T>
+	T* scoped_ptr<T>::get() const
+	{
+		return ptr_;
+	}
+
+	template<typename T>
+	void scoped_ptr<T>::swap(scoped_ptr & other)
+	{
+		std::swap(ptr_, other.ptr_);
+	}
